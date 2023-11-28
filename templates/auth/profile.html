@@ -1,0 +1,70 @@
+{% extends 'home/layout.html' %} {% block title %} {{ title }} {% endblock %} {% block content %}
+<div style="margin-left: 5%; margin-right: 7%;">
+    <p style="font-size: xx-large;">Your account details are below:</p>
+    <table>
+        <tr>
+            <td>Username:</td>
+            <td>{{ account['username'] }}</td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td>{{ account['password'] }}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ account['email'] }}</td>
+        </tr>
+    </table>
+</div>
+
+
+
+<!------------------------ Recommended card box---------------->
+<div class="container py-5" style="margin-left: 5%; margin-right: 5%;">
+
+    <form action="/home" method="POST">
+        <!-- First Row --->
+        <h3 class="font-weight-normal mb-1">My Ordered Books</h3>
+        <br>
+
+        <div class="row pb-5 mb-4">
+
+
+            {% for output in books %}
+
+
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <!-- Card-->
+                <div class="card rounded shadow-sm border-3">
+                    <center>
+                        <div class="card-body p-4"><img src="{{output['image_url']}}" alt="" class="img-fluid d-block mx-auto mb-3">
+                            <h5 style="height: 40px;">{{output['original_title']}}</h5>
+                            <p style="height: 60px;" class="small text-muted font-italic">{{output['authors']}}</p>
+                            <br>
+                            <br> {% if output['status'] == 'Pending' %}
+                            <p style="height: 40px; width: 100px;" class="btn btn-danger">{{output['status']}}</p>
+                            {% else %}
+                            <p style="height: 40px; width: 100px;" class="btn btn-primary">{{output['status']}}</p>
+                            {% endif %}
+
+                            <br>
+
+                            <a type="submit" href="/viewBook?tittle={{output['original_title']}}" class="btn btn-primary" style="margin-top: 5px;;" name="search" value="{{output['original_title']}}">View</a>
+
+
+
+                        </div>
+                    </center>
+
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    </form>
+</div>
+
+{% endblock %}

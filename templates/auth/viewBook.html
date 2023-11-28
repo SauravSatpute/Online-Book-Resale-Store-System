@@ -1,0 +1,171 @@
+<head>
+    <title>Books Recommendation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="static/css/style.css" />
+    <link rel="stylesheet" href="static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+    <body class="loggedin">
+        <nav class="navtop">
+            <div>
+                <h1>Book Resale Store System</h1>
+
+                {% if 'admin' in session['username'] %}
+                <a href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i>Orders</a> {% else %}
+                <a href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i>Profile</a> {% endif %}
+                <a href="{{ url_for('home') }}"><i class="fas fa-home"></i>Home</a>
+                <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a> </div>
+        </nav>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+        <!-- Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+
+
+    <section id="main">
+
+
+        <center>
+            <form method="post" action="/buy?book_id={{bookDetails['original_title']}}&username={{session['username']}}">
+
+                <center>
+                    <div class="content rw">
+                        <div class=" col-md-" style="background-color: f3f4f7; background: f3f4f7;  border: none; box-shadow: none;">
+                            <div class="">
+                                <img src='{{bookDetails["image_url"]}}' alt="Book" title="Books" />
+                            </div>
+                        </div>
+                        <div class="col-md-" style="margin: auto 0; background-color: f3f4f7; background: f3f4f7; border: none; box-shadow: none;">
+                            <h3 id="productName">{{ bookDetails['original_title'] }}</h3>
+                            <span class="badge badge-primary" id="mytext2" style="font-size: 25px;">Authors : {{bookDetails['authors']}} </span>
+                            <br>
+                            <br> {% if 'admin' not in session['username'] %}
+                            <button type="submit" style="width: 300px; height: 50px; font-size: 20px;" class="badge badge-success" id="submit">Buy Book</button> {% endif %}
+
+
+                        </div>
+                </center>
+
+                </div>
+
+            </form>
+
+
+        </center>
+
+
+        <div class="container">
+            <hr>
+            <div class="row">
+
+                {% if 'admin' not in session['username'] %}
+                <div class="col-md-6" style="border-right: 2px solid #cfcfcf">
+                    <form method="post" action="/prediction">
+                        <div class="form-group">
+                            <label for="uname">
+                            <h5>Your Name</h5>
+                        </label>
+                            <input type="hidden" id="book_tittle" name="book_tittle" value="{{bookDetails['original_title']}}">
+                            <input type="hidden" id="id" name="id" value="{{session['id']}}">
+                            <input type="hidden" id="username" name="username" value="{{session['username']}}">
+                            <input type="hidden" id="book_id" name="book_id" value="{{bookDetails['book_id']}}">
+
+                            <input type="text" palceholder="Enter Your Name" id="uname" name="uname" value="{{session['username']}}" readonly>
+                            <label for="reviewbox">
+                            <h5>Your Review</h5>
+                        </label>
+                            <textarea type="text" class="form-control" id="reviewbox" aria-describedby="reviewlHelp" placeholder="Write a Review" style="min-height:100px" name="review" required></textarea>
+                            <small id="reviewHelp" class="form-text text-muted">Tell us how you feel about the book.
+                        </small>
+                        </div>
+                        <button type="submit" style="width: 200px;" class="btn btn-primary" id="submit">Submit</button>
+
+                        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+                    </form>
+                    <hr>
+                </div>
+
+
+                <div class="col-md-6" id="review">
+                    <h1>Previous Reviews</h1>
+                    {% for item in data %}
+                    <div class="card bg-light mycard">
+                        <div class="card-body">
+                            <h5 class="badge badge-primary" style="font-size: 20px;">{{ item[3] }} {% if 'admin' in session['username'] %}
+                                <span class="badge badge-success">{{ item[5] }}</span> {% endif %}
+
+                            </h5>
+
+                            <p class="card-text"> {{ item[4] }} </p>
+
+
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+                {% else %}
+
+
+                <div class="col-md-6" id="review" style="width: 100%;">
+                    <center>
+                        <h1> Reviews</h1>
+                        <br>
+                    </center>
+                    {% for item in data %}
+                    <div class="card bg-light mycard">
+                        <div class="card-body">
+                            <h5 class="badge badge-primary" style="font-size: 20px;">{{ item[3] }} {% if 'admin' in session['username'] %}
+                                <span class="badge btn-danger">{{ item[5] }}</span> {% endif %}
+
+                            </h5>
+
+                            <p class="card-text"> {{ item[4] }} </p>
+
+
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% endif %}
+
+
+            </div>
+        </div>
+
+    </section>
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/jquery.poptrox.min.js"></script>
+    <script src="static/js/jquery.scrolly.min.js"></script>
+    <script src="static/js/skel.min.js"></script>
+    <script src="static/js/util.js"></script>
+    <script src="static/js/main.js"></script>
+</body>
+
+</html>

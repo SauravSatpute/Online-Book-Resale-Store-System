@@ -1,0 +1,91 @@
+{% extends 'home/layout.html' %} {% block title %} {{ title }} {% endblock %}
+
+<head>
+    <title>Book Recommendation</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=10, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />
+</head>
+
+{% block content %}
+
+<body>
+
+
+
+    <!------------------------Search Bar---------------->
+    <br>
+    <div class="container" style="margin-left: 5%; margin-right: 5%;">
+        <h2 class="font-weight-bold mb-1">
+            <p style="font-family:Tahoma; font-size: x-large;">Welcome back, {{ username }}!</p>
+
+            <p style="font-family:Tahoma; font-size: xxx-large;">Book Resale Store</h2>
+        <p style="font-style: italic;">Search Any Books And get similar types of Book recommendation.</p>
+        <!-- User Input Search Bar -->
+        <form action="/home" method="POST">
+            <div class="form-group">
+                <label for="Age">Search Book:</label>
+                <input type="text" step="1" class="form-control" placeholder="Ex: Farmer Boy" id="tags" name="search" required autocomplete="name" list="book_list"><br>
+                <div class="button-group" style="margin-top:15px;">
+                    <button type="submit" name="submit" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <script type='text/javascript'>
+            $(function() {
+                $("#tags").autocomplete({
+                    source: "{{book_title_list}}"
+                });
+            });
+        </script>
+
+    </div>
+
+
+    <!------------------------ Recommended card box---------------->
+    <div class="container py-5" style="margin-left: 5%; margin-right: 5%;">
+
+        <form action="/home" method="POST">
+            <!-- First Row --->
+            <h3 class="font-weight-normal mb-1">Recommended Books For You.</h3>
+            <p class="font-italic text-muted mb-4">Select any of the book to get more recommendation.</p>
+
+            <div class="row pb-5 mb-4">
+
+                {% for output in rec_books %}
+
+                <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                    <!-- Card-->
+                    <div class="card rounded shadow-sm border-2">
+                        <div class="card-body p-4"><img src="{{output['image_url']}}" alt="" class="img-fluid d-block mx-auto mb-3">
+                            <center>
+                                <h5 style="height: 40px;">{{output['original_title']}}</h5>
+                                <p style="height: 60px;" class="small text-muted font-italic">{{output['authors']}}</p>
+                                <button type="submit" class="btn button-group" style="background-color: rgb(2, 77, 48); color: white;" name="search" value="{{output['original_title']}}">Get Similar Books</a></button>
+                                <br>
+                                <a type="submit" href="/viewBook?tittle={{output['original_title']}}" class="btn btn-danger" style="margin-top: 5px;;" name="search" value="{{output['original_title']}}">View</a>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        </form>
+    </div>
+
+</body>
+
+
+{% endblock %}
